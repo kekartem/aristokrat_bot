@@ -14,5 +14,5 @@ idna==2.9
 multidict==6.0.2
 pytz==2022.1
 SQLAlchemy==1.4.39
--e git://github.com/supabase-community/supabase-py.git
+-e git://github.com/supabase-community/supabase-py.git#egg=supabase
 yarl==1.7.2
