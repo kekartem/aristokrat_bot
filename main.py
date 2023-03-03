@@ -156,6 +156,8 @@ async def on_name(message: types.Message, state: FSMContext):
     # await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
     managers = read_all_managers()
+    if type(managers) != list:
+        managers = list(managers)
     await state.finish()
     for manager in managers:
         await bot.send_message(int(manager.manager_chat_id),
