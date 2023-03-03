@@ -154,12 +154,10 @@ async def on_name(message: types.Message, state: FSMContext):
     # await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
     managers = await read_all_managers()
-    print(type(managers))
-    print(list(managers))
-    print(managers[0]['manager_chat_id'])
+    managers = list(managers)[0][1]
     await state.finish()
     for manager in managers:
-        await bot.send_message(int(manager.manager_chat_id),
+        await bot.send_message(int(manager['manager_chat_id']),
                                f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
 
