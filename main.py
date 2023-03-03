@@ -16,13 +16,11 @@ from config import bot, dp, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT,
 from helpers import *
 
 async def on_startup(dispatcher):
-    await database.connect()
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-    await create_tables()
 
 
 async def on_shutdown(dispatcher):
-    await database.disconnect()
+
     await bot.delete_webhook()
 
 
@@ -157,9 +155,7 @@ async def on_name(message: types.Message, state: FSMContext):
 
     managers = read_all_managers()
     print(type(managers))
-    print(managers.manager_chat_id)
-    if type(managers) != list:
-        managers = list(managers)
+    print(managers)
     await state.finish()
     for manager in managers:
         await bot.send_message(int(manager.manager_chat_id),

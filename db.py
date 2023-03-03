@@ -1,4 +1,7 @@
-from databases import Database
 from config import DB_URL
+from supabase import create_client, Client
+import os
 
-database = Database(DB_URL)
+url: str = os.getenv("SUPABASE_URL")
+key: str = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(url, key)
