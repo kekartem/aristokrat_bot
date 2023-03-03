@@ -153,7 +153,7 @@ async def on_name(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     # await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
-    managers = read_all_managers()
+    managers = await read_all_managers()
     print(type(managers))
     print(managers)
     await state.finish()
@@ -166,7 +166,7 @@ async def on_name(message: types.Message, state: FSMContext):
 async def admin(message: types.Message, state: FSMContext):
     password = message.text.split(' ')[1]
     if password == os.getenv('PASSWORD'):
-        save_manager(str(message.chat.id))
+        await save_manager(str(message.chat.id))
         await message.answer('Теперь в этот чат будут отправляться все заявки.')
         await state.finish()
     else:
