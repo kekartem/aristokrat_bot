@@ -11,7 +11,7 @@ async def create_tables():
 
 async def read_all_managers():
     results = await database.fetch_all('SELECT * FROM managers')
-    print(results)
+    print('AAAAAAAAAAAAAAAAAAAAA', results)
     return results
 
 
