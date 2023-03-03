@@ -10,11 +10,21 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import Dispatcher
 import json
 import os
+from aiogram.utils.exceptions import ChatNotFound, BotBlocked
+from aiogram.utils.executor import start_webhook
+from config import bot, dp, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT, DB_URL
 from helpers import *
 
-TOKEN = '6223445527:AAHw0hgZ_lOV088aHVgBkikSLYhnIRAh1bo'
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot, storage=MemoryStorage())
+async def on_startup(dispatcher):
+    await database.connect()
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    await create_tables()
+
+
+async def on_shutdown(dispatcher):
+    await database.disconnect()
+    await bot.delete_webhook()
+
 
 
 class HandleClient(StatesGroup):
@@ -143,13 +153,13 @@ async def on_name(message: types.Message, state: FSMContext):
     await message.answer('Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:',
                                  reply_markup=keyboard)
     user_data = await state.get_data()
-    await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
+    # await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
-    # managers = read_all_managers()
-    # await state.finish()
-    # for manager in managers:
-    #     await bot.send_message(int(manager.manager_chat_id),
-    #                            f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
+    managers = read_all_managers()
+    await state.finish()
+    for manager in managers:
+        await bot.send_message(int(manager.manager_chat_id),
+                               f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
 
 
@@ -179,4 +189,13 @@ def register_handlers_algo(dp: Dispatcher):
 register_handlers_algo(dp)
 
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True)
+    logging.basicConfig(level=logging.INFO)
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        skip_updates=True,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )
