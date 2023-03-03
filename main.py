@@ -155,7 +155,8 @@ async def on_name(message: types.Message, state: FSMContext):
 
     managers = await read_all_managers()
     print(type(managers))
-    print(managers)
+    print(list(managers))
+    print(managers[0]['manager_chat_id'])
     await state.finish()
     for manager in managers:
         await bot.send_message(int(manager.manager_chat_id),
