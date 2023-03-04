@@ -107,7 +107,6 @@ async def on_module(message: types.Message, state: FSMContext):
         modules.append(message.text)
         await state.update_data(modules=modules)
         await message.answer(f'✅ {module}')
-        print(modules)
 
 
 async def on_color(message: types.Message, state: FSMContext):
