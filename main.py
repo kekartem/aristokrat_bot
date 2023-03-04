@@ -33,6 +33,7 @@ class HandleClient(StatesGroup):
     waiting_for_table = State()
     waiting_for_area = State()
     waiting_for_name = State()
+    waiting_for_number = State()
 
 
 async def start(message: types.Message):
@@ -173,6 +174,12 @@ async def on_area(message: types.Message, state: FSMContext):
 
 async def on_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
+    await message.answer('И последнее - номер телефона или ник в телеграме, как вам удобнее 🙂')
+    await HandleClient.waiting_for_number.set()
+    
+
+async def on_number(message: types.Message, state: FSMContext):
+    await state.update_data(number=message.text)
     keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
     await message.answer('Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:',
                                  reply_markup=keyboard)
@@ -184,7 +191,7 @@ async def on_name(message: types.Message, state: FSMContext):
     await state.finish()
     for manager in managers:
         await bot.send_message(int(manager['manager_chat_id']),
-                               f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
+                               f"Новая зявка.\nИмя: {user_data.get('name')}\nКонтакт:{user_data.get('number')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
 
 
@@ -219,6 +226,7 @@ def register_handlers_algo(dp: Dispatcher):
     dp.register_message_handler(on_table, state=HandleClient.waiting_for_table)
     dp.register_message_handler(on_area, state=HandleClient.waiting_for_area)
     dp.register_message_handler(on_name, state=HandleClient.waiting_for_name)
+    dp.register_message_handler(on_number, state=HandleClient.waiting_for_number)
 
 
 register_handlers_algo(dp)
