@@ -47,11 +47,23 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
     await bot.answer_callback_query(callback_query.id)
     await state.update_data(modules=[])
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = [["Мангал", "Тандыр"], ["Казан", "Мойка"], ["Рабочая поверхность"], ["Русская печь"], ["Модуль для копчения"], ["Следующий шаг"]]
+    buttons = [["Мангал", "Мега-мангал"], ["Тандыр", "Казан"], ["Рабочая поверхность"], ["Русская печь", "Мойка"], ["Модуль для копчения"], ["Следующий шаг"]]
     for row in buttons:
         keyboard.add(*row)
     await bot.send_message(callback_query.from_user.id, 'Сейчас построим классную барбекю-зону. Для начала, выберите модули, которые установим:',
                                  reply_markup=keyboard)
+    
+    media = types.MediaGroup()
+    media.attach_photo(types.InputFile('images/modules/mang.webp'), 'Мангал')
+    media.attach_photo(types.InputFile('images/modules/supermang.webp'), 'Мега-мангал')
+    media.attach_photo(types.InputFile('images/modules/tand.webp'), 'Тандыр')
+    media.attach_photo(types.InputFile('images/modules/kazan.webp'), 'Казан')
+    media.attach_photo(types.InputFile('images/modules/rabot.webp'), 'Рабочая поверхность')
+    media.attach_photo(types.InputFile('images/modules/russ.webp'), 'Русская печь')
+    media.attach_photo(types.InputFile('images/modules/moyka.webp'), 'Мойка')
+    media.attach_photo(types.InputFile('images/modules/kopt.webp'), 'Модуль для копчения')
+
+    await bot.send_media_group(callback_query.from_user.id, media=media)
     await HandleClient.waiting_for_module.set()
 
 
@@ -78,9 +90,15 @@ async def on_module(message: types.Message, state: FSMContext):
                                  reply_markup=keyboard)
         
         media = types.MediaGroup()
-        media.attach_photo(types.InputFile('temp.png'), 'aaa')
-        media.attach_photo(types.InputFile('temp.png'), 'bbb')
-        media.attach_photo(types.InputFile('temp.png'), 'ccc')
+        media.attach_photo(types.InputFile('images/colors/rr.webp'), 'RED (прямоугольный красный)')
+        media.attach_photo(types.InputFile('images/colors/rс.webp'), 'RED (радиальный красный)')
+        media.attach_photo(types.InputFile('images/colors/rfr.webp'), 'RED FLAME (прямоугольный красный редуцированный)')
+        media.attach_photo(types.InputFile('images/colors/rfc.webp'), 'RED FLAME (радиальный красный редуцированный)')
+        media.attach_photo(types.InputFile('images/colors/tr.webp'), 'TERRA (прямоугольный тёмно-коричневый)')
+        media.attach_photo(types.InputFile('images/colors/tc.webp'), 'TERRA (радиальный тёмно-коричневый)')
+        media.attach_photo(types.InputFile('images/colors/п.webp'), 'GRAY (прямоугольный серый)')
+        media.attach_photo(types.InputFile('images/colors/п.webp'), 'BLACK GLAZE (прямоугольный чёрный глазурированный)')
+        media.attach_photo(types.InputFile('images/colors/s.webp'), 'SAFARI (прямоугольный жёлтый)')
         await bot.send_media_group(message.chat.id, media=media)
         await HandleClient.waiting_for_color.set()
     else:
@@ -118,24 +136,32 @@ async def on_foundation(message: types.Message, state: FSMContext):
         buttons = [['Как выглядит столешница?'], ['Из натурального гранита'], ['Из искусственного гранита'], ['Не делаем']]
         for row in buttons:
             keyboard.add(*row)
+        
+        media = types.MediaGroup()
+        media.attach_photo(types.InputFile('images/tables/m_1.webp'), 'Натуральный гранит')
+        media.attach_photo(types.InputFile('images/tables/m_2.webp'), 'Искусственный гранит')
+        await bot.send_media_group(message.chat.id, media=media)
         await message.answer('Делаем ли покрытие на кирпичную столешницу?', reply_markup=keyboard)
+        
         await HandleClient.waiting_for_table.set()
 
 
 async def on_table(message: types.Message, state: FSMContext):
     if message.text == 'Как выглядит столешница?':
-        await message.answer('Тут фотки столешниц')
-        # media = types.MediaGroup()
-        # media.attach_photo(types.InputFile('media/Starbucks_Logo.jpg'), 'Превосходная фотография')
-        # media.attach_photo(types.InputFile('media/Starbucks_Logo_2.jpg'), 'Превосходная фотография 2')
-        # await bot.send_media_group(call.message.chat.id, media=media)
+        media = types.MediaGroup()
+        media.attach_photo(types.InputFile('images/tables/s_1.webp'), '')
+        media.attach_photo(types.InputFile('images/tables/s_2.webp'), '')
+        media.attach_photo(types.InputFile('images/tables/s_3.webp'), '')
+        media.attach_photo(types.InputFile('images/tables/s_4.webp'), '')
+        media.attach_photo(types.InputFile('images/tables/s_5.webp'), '')
+        await bot.send_media_group(message.chat.id, media=media)
     else:
         await state.update_data(table=message.text)
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = [['Москва и МО'], ['Санкт-Петербург и ЛО']]
         for row in buttons:
             keyboard.add(*row)
-        await message.answer('Почти закончили. Подскажите, где будет находиться барбекю-зона территориально? Если вашего регисона нет в списке предложенных - отправьте название региона в чат.', reply_markup=keyboard)
+        await message.answer('Почти закончили. Подскажите, где будет находиться барбекю-зона территориально? Если вашего региона нет в списке предложенных - отправьте название региона в чат.', reply_markup=keyboard)
         await HandleClient.waiting_for_area.set()
 
 
@@ -165,8 +191,18 @@ async def on_name(message: types.Message, state: FSMContext):
 async def admin(message: types.Message, state: FSMContext):
     password = message.text.split(' ')[1]
     if password == os.getenv('PASSWORD'):
-        await save_manager(str(message.chat.id))
-        await message.answer('Теперь в этот чат будут отправляться все заявки.')
+        managers = await read_all_managers()
+        managers = list(managers)
+        exists = False
+        for manager in managers:
+            if manager['manager_chat_id'] == message.chat.id:
+                exists = True
+                break
+        if not exists:
+            await save_manager(str(message.chat.id))
+            await message.answer('Теперь в этот чат будут отправляться все заявки.')
+        else:
+            await message.answer('Вы уже администратор')
         await state.finish()
     else:
         await message.answer('Пароль неверный.')
