@@ -200,7 +200,7 @@ async def on_number(message: types.Message, state: FSMContext):
     await state.finish()
     for manager in managers:
         await bot.send_message(int(manager['manager_chat_id']),
-                               f"Новая зявка.\nИмя: {user_data.get('name')}\nКонтакт:{user_data.get('number')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
+                               f"Новая зявка.\nИмя: {user_data.get('name')}\nКонтакт: {user_data.get('number')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
 
 
