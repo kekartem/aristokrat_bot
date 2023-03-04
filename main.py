@@ -84,7 +84,17 @@ async def on_module(message: types.Message, state: FSMContext):
     module = message.text
     if module == 'Следующий шаг':
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = [["RED (прямоугольный красный)"], ["RED (радиальный красный)"]]
+        buttons = [
+            ['RED (прямоугольный красный)'],
+            ['RED (радиальный красный)'],
+            ['RED FLAME (прямоугольный красный редуцированный)'],
+            ['RED FLAME (радиальный красный редуцированный)'],
+            ['TERRA (прямоугольный тёмно-коричневый)'],
+            ['TERRA (радиальный тёмно-коричневый)'],
+            ['GRAY (прямоугольный серый)'],
+            ['BLACK GLAZE (прямоугольный чёрный глазурированный)'],
+            ['SAFARI (прямоугольный жёлтый)']
+            ]
         for row in buttons:
             keyboard.add(*row)
         await message.answer('Прекрасно! Следующий шаг - выбор цвета кирпича.',
