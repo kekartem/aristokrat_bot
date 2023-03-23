@@ -37,8 +37,8 @@ class HandleClient(StatesGroup):
 
 
 async def start(message: types.Message):
-    keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
-    await message.answer('Бич я молодой Аристкратъ. Меня зовут бот Джамал. Выберите нужное действие:',
+    keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор модульной печи', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
+    await message.answer('Вас приветствует бот компании "Аристкратъ". Выберите нужное действие:',
                                  reply_markup=keyboard)
 
 
