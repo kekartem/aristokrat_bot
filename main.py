@@ -77,7 +77,7 @@ async def show_reference(callback_query: types.CallbackQuery, state: FSMContext)
 @dp.callback_query_handler(lambda c: c.data == 'action3')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, 'Тут будут контакты')
+    await bot.send_message(callback_query.from_user.id, 'Написать менеджеру в телеграм: @Bbqaristokrat. Для связи через whatsapp: [<whatsapp>](<https://api.whatsapp.com/send?phone=79650652132>)')
 
 
 async def on_module(message: types.Message, state: FSMContext):
