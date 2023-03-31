@@ -165,7 +165,7 @@ async def on_table(message: types.Message, state: FSMContext):
         await bot.send_media_group(message.chat.id, media=media)
     else:
         await state.update_data(table=message.text)
-        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         buttons = [['Москва и МО'], ['Санкт-Петербург и ЛО']]
         for row in buttons:
             keyboard.add(*row)
@@ -203,23 +203,27 @@ async def on_number(message: types.Message, state: FSMContext):
 
 
 async def admin(message: types.Message, state: FSMContext):
-    password = message.text.split(' ')[1]
-    if password == os.getenv('PASSWORD'):
-        managers = await read_all_managers()
-        managers = list(managers)
-        exists = False
-        for manager in managers:
-            if manager['manager_chat_id'] == message.chat.id:
-                exists = True
-                break
-        if not exists:
-            await save_manager(str(message.chat.id))
-            await message.answer('Теперь в этот чат будут отправляться все заявки.')
-        else:
-            await message.answer('Вы уже администратор')
-        await state.finish()
+    password = message.text.split(' ')
+    if len(password) < 1:
+        await message.answer('Не забудьте пароль')
     else:
-        await message.answer('Пароль неверный.')
+        password = password[1]
+        if password == os.getenv('PASSWORD'):
+            managers = await read_all_managers()
+            managers = list(managers)
+            exists = False
+            for manager in managers:
+                if manager['manager_chat_id'] == message.chat.id:
+                    exists = True
+                    break
+            if not exists:
+                await save_manager(str(message.chat.id))
+                await message.answer('Теперь в этот чат будут отправляться все заявки.')
+            else:
+                await message.answer('Вы уже администратор')
+            await state.finish()
+        else:
+            await message.answer('Пароль неверный.')
     
 
 
