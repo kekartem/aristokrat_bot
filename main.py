@@ -151,7 +151,7 @@ async def on_foundation(message: types.Message, state: FSMContext):
         await state.update_data(foundation=message.text)
         await message.answer('Давайте на чистоту: Барбекю-зона это предмет роскоши. Поэтому рекомендуем присмотреться к столешницам из искусственного гранита. Мы также делаем их сами и по размерам они полностью идентичны версиям с классической кирпичной столешницей.')
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = [['Как выглядит столешница?'], ['Из натурального гранита'], ['Из искусственного гранита'], ['Не делаем']]
+        buttons = [['Примеры со столешницами'], ['Из натурального гранита'], ['Из искусственного гранита'], ['Не делаем']]
         for row in buttons:
             keyboard.add(*row)
         
@@ -197,9 +197,9 @@ async def on_name(message: types.Message, state: FSMContext):
 
 async def on_number(message: types.Message, state: FSMContext):
     await state.update_data(number=message.text)
-    link_text = hlink('https://bbq-aristokrat.ru', 'https://bbq-aristokrat.ru')
+    link_text = hlink('Канал на YouTube', 'https://www.youtube.com/@bbq-aristokrat')
     keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
-    await message.answer(f'Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:\n{link_text}',
+    await message.answer(f'Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру! Кстати, ниже по ссылке - наш канал на YouTube. Там много интересного. Подписывайтесь:\n{link_text}',
                                  reply_markup=keyboard,
                                  parse_mode='HTML')
     user_data = await state.get_data()
