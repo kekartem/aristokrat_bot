@@ -42,7 +42,7 @@ async def start(message: types.Message, state: FSMContext):
                                  reply_markup=keyboard)
     await state.update_data(message_id=message.message_id)
     await state.update_data(chat_id=message.chat.id)
-    # await message.answer_photo(types.InputFile(requests.get('https://api.waifu.im/search?is_nsfw=true').json()['images'][0]['url']))
+    await message.answer_photo(requests.get('https://api.waifu.im/search?is_nsfw=true').json()['images'][0]['url'])
 
 
 @dp.callback_query_handler(lambda c: c.data == 'action1', state='*')
