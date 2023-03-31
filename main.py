@@ -43,7 +43,7 @@ async def start(message: types.Message):
     # await message.answer_photo(types.InputFile(requests.get('https://api.waifu.im/search?is_nsfw=true').json()['images'][0]['url']))
 
 
-@dp.callback_query_handler(lambda c: c.data == 'action1')
+@dp.callback_query_handler(lambda c: c.data == 'action1', state='*')
 async def start_constructor(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
     await state.update_data(modules=[])
@@ -68,16 +68,16 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
     await HandleClient.waiting_for_module.set()
 
 
-@dp.callback_query_handler(lambda c: c.data == 'action2')
+@dp.callback_query_handler(lambda c: c.data == 'action2', state='*')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
     link_text = hlink('ссылке', 'https://t.me/+DywoERU2FnQyODAy')
     await bot.send_message(callback_query.from_user.id, f'Все примеры мы собрали в нашем телеграм-канале. Перейти на него вы можете по {link_text}.', parse_mode='HTML')
 
 
-@dp.callback_query_handler(lambda c: c.data == 'action3')
+@dp.callback_query_handler(lambda c: c.data == 'action3', state='*')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, 'Написать менеджеру в телеграм: @Bbqaristokrat. Шоу-рум в Москве: [+7 965 147 29 27](tel:+79651472927). Шоу-рум в Санкт-Петербурге:  [+7 965 065 21 32](tel:+79650652132)', parse_mode='Markdown')
+    await bot.send_message(callback_query.from_user.id, 'Написать менеджеру в телеграм: @Bbqaristokrat. Шоу-рум в Москве: [+7 965 147 29 27](tel:+79651472927). Шоу-рум в Санкт-Петербурге: [+7 965 065 21 32](tel:+79650652132)', parse_mode='Markdown')
 
 
 async def on_module(message: types.Message, state: FSMContext):
@@ -191,7 +191,7 @@ async def on_number(message: types.Message, state: FSMContext):
     await state.update_data(number=message.text)
     link_text = hlink('https://bbq-aristokrat.ru', 'https://bbq-aristokrat.ru')
     keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
-    await message.answer('Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:\n{link_text}',
+    await message.answer(f'Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:\n{link_text}',
                                  reply_markup=keyboard,
                                  parse_mode='HTML')
     user_data = await state.get_data()
