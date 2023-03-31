@@ -49,7 +49,10 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
     data = await state.get_data()
     message_id = data.get('message_id')
     chat_id = data.get('chat_id')
-    await bot.delete_message(message_id=message_id, chat_id=chat_id)
+    try:
+        await bot.delete_message(message_id=message_id, chat_id=chat_id)
+    finally:
+        ...
     await bot.answer_callback_query(callback_query.id)
     await state.update_data(modules=[])
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
