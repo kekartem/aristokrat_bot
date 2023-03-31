@@ -71,7 +71,7 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
 @dp.callback_query_handler(lambda c: c.data == 'action2')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
     link_text = hlink('ссылке', 'https://t.me/djamalaristokrat')
-    await bot.send_message(callback_query.from_user.id, f'Все примеры мы собрали в нашем телеграм-канале. Перейти на него вы можете по {link_text}.')
+    await bot.send_message(callback_query.from_user.id, f'Все примеры мы собрали в нашем телеграм-канале. Перейти на него вы можете по {link_text}.', parse_mode='HTML')
 
 
 @dp.callback_query_handler(lambda c: c.data == 'action3')
@@ -192,7 +192,8 @@ async def on_number(message: types.Message, state: FSMContext):
     link_text = hlink('https://bbq-aristokrat.ru', 'https://bbq-aristokrat.ru')
     keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
     await message.answer('Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:\n{link_text}',
-                                 reply_markup=keyboard)
+                                 reply_markup=keyboard,
+                                 parse_mode='HTML')
     user_data = await state.get_data()
     # await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
 
