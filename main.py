@@ -41,6 +41,7 @@ async def start(message: types.Message, state: FSMContext):
     message = await message.answer('Вас приветствует бот компании "Аристкратъ". Выберите нужное действие:',
                                  reply_markup=keyboard)
     await state.update_data(message_id=message.message_id)
+    await state.update_data(chat_id=message.chat.id)
     # await message.answer_photo(types.InputFile(requests.get('https://api.waifu.im/search?is_nsfw=true').json()['images'][0]['url']))
 
 
@@ -48,7 +49,8 @@ async def start(message: types.Message, state: FSMContext):
 async def start_constructor(callback_query: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
     message_id = data.get('message_id')
-    await bot.delete_message(message_id=message_id)
+    chat_id = data.get('chat_id')
+    await bot.delete_message(message_id=message_id, chat_id=chat_id)
     await bot.answer_callback_query(callback_query.id)
     await state.update_data(modules=[])
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
