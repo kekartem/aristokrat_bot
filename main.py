@@ -15,6 +15,7 @@ from aiogram.utils.executor import start_webhook
 from config import bot, dp, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT, DB_URL
 from helpers import *
 import requests
+from aiogram.utils.markdown import hlink
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
@@ -22,6 +23,7 @@ async def on_startup(dispatcher):
 
 async def on_shutdown(dispatcher):
     await bot.delete_webhook()
+
 
 class HandleClient(StatesGroup):
     # waiting_for_action = State()
@@ -41,13 +43,12 @@ async def start(message: types.Message):
     # await message.answer_photo(types.InputFile(requests.get('https://api.waifu.im/search?is_nsfw=true').json()['images'][0]['url']))
 
 
-
 @dp.callback_query_handler(lambda c: c.data == 'action1')
 async def start_constructor(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
     await state.update_data(modules=[])
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = [["Мангал", "Мега-мангал"], ["Тандыр", "Казан"], ["Рабочая поверхность"], ["Русская печь", "Мойка"], ["Модуль для копчения"], ["Следующий шаг"]]
+    buttons = [["Мангал", "Мега-мангал"], ["Тандыр", "Казан"], ["Рабочая поверхность"], ["Русская печь", "Мойка"], ["Модуль для копчения"], ["Следующий шаг ->"]]
     for row in buttons:
         keyboard.add(*row)
     await bot.send_message(callback_query.from_user.id, 'Сейчас построим классную барбекю-зону. Для начала, выберите модули, которые установим:',
@@ -69,8 +70,8 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
 
 @dp.callback_query_handler(lambda c: c.data == 'action2')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
-    await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, 'Тут будут примеры барбекю-зон')
+    link_text = hlink('ссылке', 'https://t.me/djamalaristokrat')
+    await bot.send_message(callback_query.from_user.id, f'Все примеры мы собрали в нашем телеграм-канале. Перейти на него вы можете по {link_text}.')
 
 
 @dp.callback_query_handler(lambda c: c.data == 'action3')
@@ -78,9 +79,10 @@ async def show_reference(callback_query: types.CallbackQuery, state: FSMContext)
     await bot.answer_callback_query(callback_query.id)
     await bot.send_message(callback_query.from_user.id, 'Написать менеджеру в телеграм: @Bbqaristokrat. Шоу-рум в Москве: [+7 965 147 29 27](tel:+79651472927). Шоу-рум в Санкт-Петербурге:  [+7 965 065 21 32](tel:+79650652132)', parse_mode='Markdown')
 
+
 async def on_module(message: types.Message, state: FSMContext):
     module = message.text
-    if module == 'Следующий шаг':
+    if module == 'Следующий шаг ->':
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = [
             ['RED (прямоугольный красный)'],
@@ -139,7 +141,7 @@ async def on_foundation(message: types.Message, state: FSMContext):
 
     if message.text != 'Что это означает?':
         await state.update_data(foundation=message.text)
-        await message.answer('Давайте на чистоту: Барбекю-зона это предмет роскоши. Поэтому рекомендуем присмотреться к столешницам из искусственного гранита. Мы также делаем их сами и по размерам они полностью идентичны версиям с классической кирпичной столешницей. \n Давайте на чистоту: Барбекю-зона это предмет роскоши. Поэтому рекомендуем присмотреться к столешницам из искусственного гранита. Мы также делаем их сами и по размерам они полностью идентичны версиям с классической кирпичной столешницей.')
+        await message.answer('Давайте на чистоту: Барбекю-зона это предмет роскоши. Поэтому рекомендуем присмотреться к столешницам из искусственного гранита. Мы также делаем их сами и по размерам они полностью идентичны версиям с классической кирпичной столешницей.')
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = [['Как выглядит столешница?'], ['Из натурального гранита'], ['Из искусственного гранита'], ['Не делаем']]
         for row in buttons:
@@ -166,10 +168,10 @@ async def on_table(message: types.Message, state: FSMContext):
     else:
         await state.update_data(table=message.text)
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-        buttons = [['Москва и МО'], ['Санкт-Петербург и ЛО']]
+        buttons = [['Москва и МО'], ['Санкт-Петербург и ЛО'] ['Другой регион']]
         for row in buttons:
             keyboard.add(*row)
-        await message.answer('Почти закончили. Подскажите, где будет находиться барбекю-зона территориально? Если вашего региона нет в списке предложенных - отправьте название региона в чат.', reply_markup=keyboard)
+        await message.answer('Почти закончили. Подскажите, где будет находиться барбекю-зона территориально?', reply_markup=keyboard)
         await HandleClient.waiting_for_area.set()
 
 
@@ -187,8 +189,9 @@ async def on_name(message: types.Message, state: FSMContext):
 
 async def on_number(message: types.Message, state: FSMContext):
     await state.update_data(number=message.text)
+    link_text = hlink('https://bbq-aristokrat.ru', 'https://bbq-aristokrat.ru')
     keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
-    await message.answer('Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:',
+    await message.answer('Спасибо за ваши ответы!\nВаша заявка отправлена менеджеру, с вами свяжутся в ближайшее время. А пока - можете взглянуть на интересный и полезный контент от Аристократа:\n{link_text}',
                                  reply_markup=keyboard)
     user_data = await state.get_data()
     # await message.answer(f"Новая зявка.\nИмя: {user_data.get('name')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
@@ -199,7 +202,6 @@ async def on_number(message: types.Message, state: FSMContext):
     for manager in managers:
         await bot.send_message(int(manager['manager_chat_id']),
                                f"Новая зявка.\nИмя: {user_data.get('name')}\nКонтакт: {user_data.get('number')}\nМодули: {', '.join(user_data.get('modules'))}\nЦвет: {user_data.get('color')}\nЕсть фундамент: {user_data.get('foundation')}\nСтолешница: {user_data.get('table')}\nРегион: {user_data.get('area')}")
-
 
 
 async def admin(message: types.Message, state: FSMContext):
@@ -225,8 +227,6 @@ async def admin(message: types.Message, state: FSMContext):
         else:
             await message.answer('Пароль неверный.')
     
-
-
 
 def register_handlers_algo(dp: Dispatcher):
     dp.register_message_handler(start, commands="start", state="*")
