@@ -204,7 +204,7 @@ async def on_number(message: types.Message, state: FSMContext):
 
 async def admin(message: types.Message, state: FSMContext):
     password = message.text.split(' ')
-    if len(password) < 1:
+    if len(password) <= 1:
         await message.answer('Не забудьте пароль')
     else:
         password = password[1]
