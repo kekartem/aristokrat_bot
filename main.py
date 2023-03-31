@@ -211,9 +211,10 @@ async def admin(message: types.Message, state: FSMContext):
         if password == os.getenv('PASSWORD'):
             managers = await read_all_managers()
             managers = list(managers)
+            print(managers)
             exists = False
             for manager in managers:
-                if manager['manager_chat_id'] == message.chat.id:
+                if int(manager['manager_chat_id']) == message.chat.id:
                     exists = True
                     break
             if not exists:
