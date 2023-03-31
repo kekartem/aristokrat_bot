@@ -59,7 +59,7 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
     buttons = [["Мангал", "Мега-мангал"], ["Тандыр", "Казан"], ["Рабочая поверхность"], ["Русская печь", "Мойка"], ["Модуль для копчения"], ["Следующий шаг ->"]]
     for row in buttons:
         keyboard.add(*row)
-    await bot.send_message(callback_query.from_user.id, 'Сейчас построим классную барбекю-зону. Для начала, выберите модули, которые установим:',
+    await bot.send_message(callback_query.from_user.id, 'Мы производим готовые барбекю зоны, состоящие из модулей. Сам набор и их последовательность вы определяете самостоятельно. Выберите модули, которые вам по душе и по вкусу:',
                                  reply_markup=keyboard)
     
     media = types.MediaGroup()
@@ -79,7 +79,7 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
 @dp.callback_query_handler(lambda c: c.data == 'action2', state='*')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
     link_text = hlink('ссылке', 'https://t.me/+DywoERU2FnQyODAy')
-    await bot.send_message(callback_query.from_user.id, f'Все примеры мы собрали в нашем телеграм-канале. Перейти на него вы можете по {link_text}.', parse_mode='HTML')
+    await bot.send_message(callback_query.from_user.id, f'Некоторые примеры работ можно посмотреть по {link_text}.', parse_mode='HTML')
 
 
 @dp.callback_query_handler(lambda c: c.data == 'action3', state='*')
@@ -105,7 +105,7 @@ async def on_module(message: types.Message, state: FSMContext):
             ]
         for row in buttons:
             keyboard.add(*row)
-        await message.answer('Прекрасно! Следующий шаг - выбор цвета кирпича.',
+        await message.answer('Прекрасно! Теперь выберите цвет кирпича и его форму. На картинках изображена 665 модель печи АристократЪ выполненная из указанных ниже кирпичей.',
                                  reply_markup=keyboard)
         
         media = types.MediaGroup()
@@ -143,7 +143,7 @@ async def on_foundation(message: types.Message, state: FSMContext):
     if message.text == 'Что это означает?':
         await message.answer('Текст о том, что такое фундамент')
     elif message.text == 'Да':
-        await message.answer('Отлично! Средний вес зоны-барбекю из кирпича - 1000кг.')
+        await message.answer('Отлично! Средний вес зоны-барбекю из кирпича от 1000 до 4000кг.')
     elif message.text == 'Нет':
         await message.answer('Хорошо. Имейте в виду, что перед установкой барбекю-зоны необходимо чтобы покрытие выдерживало ее вес. Средний вес барбекю- зон из кирпича - около 1000кг. Мы, как производитель, советуем заливать бетонную плиту, но и свайный фундамент также хорошо подойдет.')
 
