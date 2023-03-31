@@ -36,15 +36,19 @@ class HandleClient(StatesGroup):
     waiting_for_number = State()
 
 
-async def start(message: types.Message):
+async def start(message: types.Message, state: FSMContext):
     keyboard = types.InlineKeyboardMarkup(row_width=1).add(types.InlineKeyboardButton('🔧 Конструктор модульной печи', callback_data='action1'), types.InlineKeyboardButton('♨️ Примеры', callback_data='action2'), types.InlineKeyboardButton('📞 Контакты', callback_data='action3'))
-    await message.answer('Вас приветствует бот компании "Аристкратъ". Выберите нужное действие:',
+    message = await message.answer('Вас приветствует бот компании "Аристкратъ". Выберите нужное действие:',
                                  reply_markup=keyboard)
+    await state.update_data(message_id=message.message_id)
     # await message.answer_photo(types.InputFile(requests.get('https://api.waifu.im/search?is_nsfw=true').json()['images'][0]['url']))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'action1', state='*')
 async def start_constructor(callback_query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    message_id = data.get('message_id')
+    await bot.delete_message(message_id=message_id)
     await bot.answer_callback_query(callback_query.id)
     await state.update_data(modules=[])
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
