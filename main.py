@@ -70,7 +70,7 @@ async def start_constructor(callback_query: types.CallbackQuery, state: FSMConte
 
 @dp.callback_query_handler(lambda c: c.data == 'action2')
 async def show_reference(callback_query: types.CallbackQuery, state: FSMContext):
-    link_text = hlink('ссылке', 'https://t.me/djamalaristokrat')
+    link_text = hlink('ссылке', 'https://t.me/+DywoERU2FnQyODAy')
     await bot.send_message(callback_query.from_user.id, f'Все примеры мы собрали в нашем телеграм-канале. Перейти на него вы можете по {link_text}.', parse_mode='HTML')
 
 
@@ -168,7 +168,7 @@ async def on_table(message: types.Message, state: FSMContext):
     else:
         await state.update_data(table=message.text)
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-        buttons = [['Москва и МО'], ['Санкт-Петербург и ЛО'] ['Другой регион']]
+        buttons = [['Москва и МО'], ['Санкт-Петербург и ЛО'], ['Другой регион']]
         for row in buttons:
             keyboard.add(*row)
         await message.answer('Почти закончили. Подскажите, где будет находиться барбекю-зона территориально?', reply_markup=keyboard)
