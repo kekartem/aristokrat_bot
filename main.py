@@ -165,7 +165,7 @@ async def on_foundation(message: types.Message, state: FSMContext):
 
 
 async def on_table(message: types.Message, state: FSMContext):
-    if message.text == 'Как выглядит столешница?':
+    if message.text == 'Примеры со столешницами':
         media = types.MediaGroup()
         media.attach_photo(types.InputFile('images/tables/s_1.webp'), '')
         media.attach_photo(types.InputFile('images/tables/s_2.webp'), '')
