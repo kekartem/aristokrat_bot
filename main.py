@@ -16,9 +16,19 @@ from config import bot, dp, WEBHOOK_URL, WEBHOOK_PATH, WEBAPP_HOST, WEBAPP_PORT,
 from helpers import *
 import requests
 from aiogram.utils.markdown import hlink
+import aioschedule
+import asyncio
+
+async def scheduler():
+    aioschedule.every().minute.do(update)
+    while True:
+        await aioschedule.run_pending()
+        await asyncio.sleep(1)
 
 async def on_startup(dispatcher):
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+    asyncio.create_task(scheduler())
+    
 
 
 async def on_shutdown(dispatcher):
