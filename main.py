@@ -20,7 +20,7 @@ import aioschedule
 import asyncio
 
 async def scheduler():
-    aioschedule.every().minute.do(update)
+    aioschedule.every(6).days.at("00:01").do(update)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
